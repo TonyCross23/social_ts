@@ -1,32 +1,11 @@
-import eslintPluginPrettier from "eslint-plugin-prettier";
-import eslintPluginTypeScript from "@typescript-eslint/eslint-plugin";
-import parserTypeScript from "@typescript-eslint/parser";
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
 
-export default [
-  {
-    ignores: [
-      "node_modules/",
-      "dist/",
-      "src/generated/"
-    ],
-  },
-  {
-    files: ["**/*.ts", "**/*.js"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      parser: parserTypeScript,
-      globals: {
-        NodeJS: "readonly",
-      },
-    },
-    plugins: {
-      "@typescript-eslint": eslintPluginTypeScript,
-      prettier: eslintPluginPrettier,
-    },
-    rules: {
-      "prettier/prettier": "error",
-    },
-    settings: {},
-  },
-];
+
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,ts}"], plugins: { js }, extends: ["js/recommended"] },
+  { files: ["**/*.{js,mjs,cjs,ts}"], languageOptions: { globals: {...globals.browser, ...globals.node} } },
+  tseslint.configs.recommended,
+]);

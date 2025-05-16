@@ -1,32 +1,3 @@
 node_modules
 # Keep environment variables out of version control
 .env
-# dependencies
-/node_modules
-
-# TypeScript build output
-/dist
-/build
-
-# Logs
-logs
-*.log
-
-# environment variables
-.env
-
-# OS files
-.DS_Store
-
-# Husky
-.husky/_
-
-# ESLint cache
-.eslintcache
-
-# VS Code settings
-.vscode
-
-# Optional: Prisma generated files if using Prisma
-/prisma/migrations
-/prisma/dev.db

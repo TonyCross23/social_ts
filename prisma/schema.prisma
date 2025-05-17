@@ -30,11 +30,7 @@ model User {
 
 model Session {
   id           String   @id @default(cuid())
-  expiresAt    DateTime
   sessionToken String   @unique
-  data         Json
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@map("session")
+  userId       String
+  expires      DateTime
 }

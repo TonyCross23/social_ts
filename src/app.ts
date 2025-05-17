@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import log from "./logger/log"
 import authRoute from "./routes/auth.route";
+import cookieParser from 'cookie-parser';
 
 dotenv.config()
 
@@ -9,7 +10,8 @@ const PORT = process.env.PORT || 4321
 
 const app = express()
 
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/v1", authRoute)
 

@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs"
 import {prisma} from "../databases/db";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
 
 
 export const AuthService = {
@@ -25,6 +27,6 @@ export const AuthService = {
         const accessToken = generateAccessToken({ id: user.id });
         const refreshToken = generateRefreshToken({ id: user.id });
 
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken,  };
     }
 }

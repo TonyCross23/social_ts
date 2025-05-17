@@ -43,4 +43,33 @@ describe('/api/v1/register', () => {
         })
     })
   })
+
+
+  describe("when passwords don't match", () => {
+    it("should return 400 error", async () => {
+      const registerSpy = jest.spyOn(AuthService.AuthService, "register");
+
+      const { statusCode } = await supertest(app)
+        .post("/api/v1/register")
+        .send({ ...userInput, passwordConfirmation: "mismatch" });
+
+      expect(statusCode).toBe(400);
+      expect(registerSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("when email is already exist", () => {
+    it("should be return 409 error",async () => {
+      const registerSpy = jest
+        .spyOn(AuthService.AuthService,'register')
+        .mockRejectedValueOnce({code: "P2002"})
+
+      const {statusCode} = await supertest(app)
+        .post("/api/v1/register")
+        .send(userInput)
+      
+      expect(statusCode).toBe(409)
+      expect(registerSpy).toHaveBeenCalled()
+    })
+  })
 })

@@ -1,12 +1,20 @@
 import bcrypt from "bcryptjs"
 import {prisma} from "../databases/db";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
-import { v4 as uuidv4 } from "uuid";
-import dayjs from "dayjs";
 
 
 export const AuthService = {
     register : async ({name,email, password}: any) => {
+
+        const existingUser = await prisma.user.findUnique({
+          where: { email },
+        });
+
+        if (existingUser) {
+            // throw 409 conflict error
+            throw new Error("Email already exists");
+        }
+
         const hashed = await bcrypt.hash(password, 10)
         const user = await prisma.user.create({ data: { name, email, password: hashed } });
 

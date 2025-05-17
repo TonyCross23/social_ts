@@ -7,6 +7,7 @@ const config: Config = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
+  clearMocks: true
 };
 
 export default config;

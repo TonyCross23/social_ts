@@ -4,7 +4,8 @@ import { ZodSchema } from "zod";
 
 
 export const validate = (shcema: ZodSchema) => (req: Request, res: Response, next: NextFunction): void => {
-    const result = shcema.safeParse(req.body)
+   try {
+     const result = shcema.safeParse(req.body)
 
     if(!result.success) {
      res.status(400).json({ errors: result.error.errors });
@@ -12,4 +13,10 @@ export const validate = (shcema: ZodSchema) => (req: Request, res: Response, nex
     }
 
     next()
+   } catch (err) {
+      res.status(400).json({
+      message: err.errors[0].message,
+    });
+    return;
+   }
 }

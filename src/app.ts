@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import log from "./logger/log"
 import authRoute from "./routes/auth.route";
 import cookieParser from 'cookie-parser';
+import { errorHandler } from "./exceptions/errorHandler";
 
 dotenv.config()
 
@@ -12,6 +13,7 @@ const app = express()
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(errorHandler)
 
 app.use("/api/v1", authRoute)
 

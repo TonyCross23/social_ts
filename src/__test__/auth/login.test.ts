@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import * as AuthService from "../services/auth.service";
-import app from "../app";
+import * as AuthService from "../../services/auth.service";
+import app from "../../app";
 
 
 const loginInput = {

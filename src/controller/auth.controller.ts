@@ -47,7 +47,7 @@ export const AuthController = {
 
         res.status(200).json(result)
       } catch (err: any) {
-        res.status(401).json({ message: err.message });
+        res.status(404).json({ message: err.message });
       }
     },
 

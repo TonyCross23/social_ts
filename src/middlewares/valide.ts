@@ -13,10 +13,15 @@ export const validate = (shcema: ZodSchema) => (req: Request, res: Response, nex
     }
 
     next()
-   } catch (err) {
+   } catch (err: unknown) {
+    if (err instanceof Error) {
       res.status(400).json({
-      message: err.errors[0].message,
-    });
-    return;
-   }
+        message: err.message,
+      });
+    } else {
+      res.status(400).json({
+        message: "Unexpected error occurred",
+      });
+    }
+  }
 }

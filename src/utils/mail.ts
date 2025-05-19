@@ -19,4 +19,7 @@ export const sendMail = async (to: string, subject: string, html: string) => {
         subject,
         html,
     })
+
+     info.messageId;
+     nodemailer.getTestMessageUrl(info);
 }

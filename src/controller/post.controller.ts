@@ -1,12 +1,5 @@
 import { Request, Response } from "express";
 import { PostService } from "../services/post.service";
-import { get } from "http";
-
-
-
-interface TokenPayload {
-  userId: string;
-}
 
 export const PostController = {
     postCreate: async (req: Request, res: Response) => {
@@ -48,6 +41,18 @@ export const PostController = {
              res.status(200).json(formattedPost);
         } catch (err: any) {
             res.status(400).json({ message: err.message });
+        }
+    },
+
+    postEdit: async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            const { content, image } = req.body;
+            const authorId = (req as any).user?.id;
+            const post = await PostService.postEdit(id, content, authorId, image);
+            res.status(200).json(post);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
     }
 }

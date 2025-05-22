@@ -49,5 +49,19 @@ export const PostService = {
             }
         })
         return post
+    },
+
+    postEdit: async (id: string, content: string, authorId: string, image?:string) => {
+        const post = await prisma.post.update({
+            where: {
+                id
+            },
+            data: {
+                content,
+                authorId,
+                image: image ? image : null,
+            }
+        });
+        return post;
     }
 }

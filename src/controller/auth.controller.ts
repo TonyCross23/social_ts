@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
-import jwt from "jsonwebtoken";
-import { generateAccessToken } from "../utils/jwt";
 import dotenv from "dotenv";
 dotenv.config();
 

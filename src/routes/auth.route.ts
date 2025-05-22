@@ -27,7 +27,7 @@ authRoute.post("/refresh", AuthController.handleRefreshToken);
 authRoute.delete('/logout', Authenticate, AuthController.logout);
 
 authRoute.get("/home", Authenticate, (req: Request, res: Response) => {
-  const user = (req as any).user; // type override if needed
+  const user = (req as any).user;
   res.status(200).json({ message: "hello", user });
 });
 

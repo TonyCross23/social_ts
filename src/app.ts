@@ -4,6 +4,7 @@ import log from "./logger/log"
 import authRoute from "./routes/auth.route";
 import cookieParser from 'cookie-parser';
 import { errorHandler } from "./exceptions/errorHandler";
+import postRouter from "./routes/post.route";
 
 dotenv.config()
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler)
 
 app.use("/api/v1", authRoute)
+app.use("/api/v1/post",postRouter)
 
 
 app.listen(PORT, () => {

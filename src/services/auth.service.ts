@@ -9,7 +9,7 @@ import {
 } from "../utils/jwt";
 import dotenv from "dotenv";
 import { sendMail } from "../utils/mail";
-import { Request, Response } from "express";
+import { Response } from "express";
 dotenv.config();
 
 export const AuthService = {

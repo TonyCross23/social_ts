@@ -7,5 +7,7 @@ import { Authenticate } from "../middlewares/auth.middleware"
 const postRouter = Router()
 
 postRouter.post("/create",Authenticate,validate(postCreateSchema), PostController.postCreate)
+postRouter.get("/feed", Authenticate, PostController.getAllPost)
+postRouter.get("/:id", Authenticate, PostController.getPostById)
 
 export default postRouter

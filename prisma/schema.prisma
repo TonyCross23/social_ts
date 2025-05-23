@@ -14,15 +14,19 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  image     String?
-  bio       String?
-  age       String?
-  address   String?
-  Post      Post[]
+  id       String  @id @default(cuid())
+  name     String
+  email    String  @unique
+  password String
+  image    String?
+  bio      String?
+  age      String?
+  address  String?
+  Post     Post[]
+
+  followedBy Follow[] @relation("FollowedBy")
+  following  Follow[] @relation("Following")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -44,7 +48,20 @@ model Post {
   updatedAt DateTime @updatedAt
   authorId  String
 
-  author    User     @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id])
 
   @@map("post")
+}
+
+model Follow {
+  id          String @id @default(cuid())
+  follower    User   @relation("Following", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("FollowedBy", fields: [followingId], references: [id])
+  followingId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("follow")
 }

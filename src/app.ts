@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import log from "./logger/log"
 import cookieParser from 'cookie-parser';
 import { errorHandler } from "./exceptions/errorHandler";
-import router from "./routes/ root";
+import router from "./routes/ root.route";
 
 dotenv.config()
 

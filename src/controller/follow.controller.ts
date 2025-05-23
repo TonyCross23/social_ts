@@ -24,5 +24,19 @@ export const followController = {
         } catch (error) {
             res.status(400).json({ message: (error as Error).message });
         }
+    },
+
+    getFollowers: async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).user?.id;
+            const followers = await followService.getFollowers(userId);
+             const followerList = followers.map(({ follower, ...rest }) => ({
+                    name: follower.name,
+                    ...rest,
+                }));
+            res.status(200).json({followerList});
+        } catch (error) {
+            res.status(400).json({ message: (error as Error).message });
+        }
     }
 }

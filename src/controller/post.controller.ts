@@ -4,10 +4,11 @@ import { PostService } from "../services/post.service";
 export const PostController = {
     postCreate: async (req: Request, res: Response) => {
         try {
-            const { content, image } = req.body;
+            const { content } = req.body;
             let authorId = (req as any).user?.id;
+            const image = (req as any).file?.path || null;
             const post = await PostService.createPost(content, authorId, image);
-            res.status(201).json(post);
+            res.status(201).json({post});
         } catch (err: any) {
             res.status(400).json({ message: err.message });
         }
@@ -47,12 +48,23 @@ export const PostController = {
     postEdit: async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-            const { content, image } = req.body;
+            const { content } = req.body;
             const authorId = (req as any).user?.id;
+            const image = (req as any).file?.path;
             const post = await PostService.postEdit(id, content, authorId, image);
-            res.status(200).json(post);
+            res.status(200).json({post});
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
-    }
+    },
+    
+    postDelete: async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            const post = await PostService.postDelete(id);
+            res.status(200).json({ message: "Post deleted successfully" });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
 }

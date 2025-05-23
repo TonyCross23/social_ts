@@ -1,6 +1,16 @@
-import { get } from 'http';
+import cloudinary from '../utils/cloudinary';
 import { prisma } from '../databases/db';
 
+const getPublicIdFromUrl = (url: string): string => {
+  const parts = url.split('/');
+  const fileName = parts[parts.length - 1];
+  const folder = parts[parts.length - 2];
+  return `${folder}/${fileName.split('.')[0]}`;
+};
+
+export const deleteImage = async (publicId: string) => {
+  return await cloudinary.uploader.destroy(publicId);
+};
 
 export const PostService = {
     createPost: async (content: string, authorId: string, image?:string) => {
@@ -52,14 +62,55 @@ export const PostService = {
     },
 
     postEdit: async (id: string, content: string, authorId: string, image?:string) => {
-        const post = await prisma.post.update({
+
+        const post = await prisma.post.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if(!post) {
+          throw new Error("Post not found");
+        }
+
+        if(image || post.image) {
+            const publicId = getPublicIdFromUrl(post.image);
+            await deleteImage(publicId);
+        }
+
+        const updatePost = await prisma.post.update({
             where: {
                 id
             },
             data: {
                 content,
                 authorId,
-                image: image ? image : null,
+                image: image ||  post.image,
+            }
+        });
+        return updatePost;
+    },
+
+    postDelete: async (id: string) => {
+
+        const post = await prisma.post.findUnique({
+            where: {
+                id
+            }
+        });
+
+        if(!post) {
+          throw new Error("Post not found");
+        }
+
+        if(post.image) {
+            const publicId = getPublicIdFromUrl(post.image);
+            await deleteImage(publicId);
+        }
+
+            await prisma.post.delete({
+            where: {
+                id
             }
         });
         return post;

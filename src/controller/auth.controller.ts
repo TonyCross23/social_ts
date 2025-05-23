@@ -80,7 +80,7 @@ export const AuthController = {
         httpOnly: true,
         secure: false,
         sameSite: "strict",
-        maxAge: 30 * 1000,
+        maxAge: 15 * 60 * 1000, // 15 minutes
       });
 
       res.json({ accessToken: newAccessToken });

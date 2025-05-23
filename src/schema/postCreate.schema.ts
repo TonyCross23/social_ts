@@ -2,7 +2,5 @@ import { z } from "zod";
 
 
 export const postCreateSchema = z.object({
-    content: z.string({
-        required_error: "Content is required",
-    }),
-})
+  content: z.string().min(1, 'Content is required'),
+});

@@ -3,9 +3,7 @@ import { prisma } from "../databases/db";
 import {
   generateAccessToken,
   generateRefreshToken,
-  generateResetToken,
   verifyRefreshToken,
-  verifyResetToken,
 } from "../utils/jwt";
 import dotenv from "dotenv";
 import { sendMail } from "../utils/mail";
@@ -55,7 +53,7 @@ export const AuthService = {
       throw new Error("Email not found");
     }
 
-    const token = generateResetToken({ id: user.id });
+    const token = generateRefreshToken({ id: user.id });
 
     const resetLink = `${process.env.FRONTEND_URL}/api/v1/reset?token=${token}`;
     const html = `<h1>Password Reset</h1><p><a href="${resetLink}">Click here</a> to reset your password. This link expires in 15 minutes.</p>`;
@@ -65,7 +63,7 @@ export const AuthService = {
   },
 
   resetPassword: async (token: string, newPassword: string) => {
-    const decode: any = verifyResetToken(token);
+    const decode: any = verifyRefreshToken(token);
     const payload: any = decode;
 
     const hashed = await bcrypt.hash(newPassword, 10);

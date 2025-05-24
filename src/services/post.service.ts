@@ -41,6 +41,36 @@ export const PostService = {
         return posts
     },
 
+    getPostFollowing: async (userId: string) => {
+        const follow = await prisma.follow.findMany({
+            where: {
+                followerId: userId
+            }
+        })
+        
+        const users = follow.map((item) => item.followingId)
+
+        const posts = await prisma.post.findMany({
+            where: {
+                authorId: {
+                    in: users
+                },
+            },
+            select: {
+                id: true,
+                author: {
+                    select: {
+                        name: true
+                    }
+                },
+                content: true,
+                image: true,
+                createdAt: true
+            }
+        })
+        return posts;
+    },
+
     getPostById: async (id: string) => {
         const post = await prisma.post.findUnique({
             where: {

@@ -9,6 +9,7 @@ const postRouter = Router()
 
 postRouter.post("/create",Authenticate, upload.single('image'), validate(postCreateSchema), PostController.postCreate)
 postRouter.get("/feed", Authenticate, PostController.getAllPost)
+postRouter.get("/feed/following", Authenticate, PostController.getPostFollowing)
 postRouter.get("/:id", Authenticate, PostController.getPostById)
 postRouter.put("/:id", Authenticate, upload.single('image'), validate(postCreateSchema), PostController.postEdit)
 postRouter.delete("/:id", Authenticate, PostController.postDelete)

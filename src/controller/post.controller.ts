@@ -26,6 +26,21 @@ export const PostController = {
             res.status(400).json({message: err.message})
         }
     },
+
+    getPostFollowing: async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).user?.id;
+            const posts = await PostService.getPostFollowing(userId);
+            const formattedPosts = posts.map(({ author, ...rest }) => ({
+                name: author.name,
+                ...rest,
+            }));
+            res.status(200).json({formattedPosts});
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    },
+
     getPostById: async (req: Request, res: Response) => {
         try {
             const { id } = req.params;

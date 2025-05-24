@@ -27,6 +27,8 @@ model User {
   followedBy Follow[] @relation("FollowedBy")
   following  Follow[] @relation("Following")
 
+  postLikes    PostLike[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -49,6 +51,7 @@ model Post {
   authorId  String
 
   author User @relation(fields: [authorId], references: [id])
+  postLikes PostLike[]
 
   @@map("post")
 }
@@ -65,3 +68,15 @@ model Follow {
 
   @@map("follow")
 }
+model PostLike {
+    id      Int      @id @default(autoincrement())
+    post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId  String
+    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId  String
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@map("post_like")
+}
+

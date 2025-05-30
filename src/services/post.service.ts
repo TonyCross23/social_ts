@@ -27,17 +27,28 @@ export const PostService = {
     getAllPost: async () => {
         const posts = await prisma.post.findMany({
             select: {
-                id: true,
-                author: {
-                    select: {
-                        name: true
-                    }
-                },
-                content: true,
-                image: true,
-                createdAt: true
+            id: true,
+            author: {
+                select: {
+                name: true
+                }
+            },
+            content: true,
+            image: true,
+            postLikes: {
+                select: {
+                id: true
+                }
+            },
+            createdAt: true
             }
-        })
+        });
+
+        // Add likeCount property to each post
+        posts.forEach((post: any) => {
+            post.likeCount = post.postLikes.length;
+            delete post.postLikes;
+        });
         return posts
     },
 
@@ -98,7 +109,6 @@ export const PostService = {
                 id
             }
         })
-
         if(!post) {
           throw new Error("Post not found");
         }
@@ -137,7 +147,6 @@ export const PostService = {
             const publicId = getPublicIdFromUrl(post.image);
             await deleteImage(publicId);
         }
-
             await prisma.post.delete({
             where: {
                 id

@@ -28,7 +28,7 @@ export const AuthController = {
         httpOnly: false, // true if you don't want client-side JS to access
         secure: false, // true if using HTTPS
         sameSite: "strict",
-        maxAge: 15 * 60 * 1000, // 15 minutes
+        maxAge: 15 * 60 * 1000, // 15 minutes 
       });
 
       res.cookie("refreshToken", refreshToken, {

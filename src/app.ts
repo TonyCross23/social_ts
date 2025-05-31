@@ -4,6 +4,7 @@ import log from "./logger/log"
 import cookieParser from 'cookie-parser';
 import { errorHandler } from "./exceptions/errorHandler";
 import router from "./routes/root.route";
+import cors from "cors"
 
 dotenv.config()
 
@@ -14,6 +15,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler)
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}))
 
 app.use("/api/v1", router)
 

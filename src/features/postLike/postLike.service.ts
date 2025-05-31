@@ -1,3 +1,4 @@
+import redis from "../../databases/redis"
 import { prisma } from "../../databases/db"
 
 interface postProps {
@@ -31,6 +32,11 @@ export const PostLikeService = {
     },
 
     getAllPostLike: async (postId: string) => {
+        const cachePostLike = await redis.get("user's-post-likes")
+
+        if(cachePostLike) {
+            return JSON.parse(cachePostLike)
+        }
         const likes = await prisma.postLike.findMany({
             where: {postId},
             select: {
@@ -44,6 +50,7 @@ export const PostLikeService = {
             }
             
         })
+        await redis.set("user's-post-likes" , JSON.stringify(likes), "EX", 60)
         return likes
     }
 }

@@ -1,5 +1,6 @@
 import cloudinary from '../utils/cloudinary';
 import { prisma } from '../databases/db';
+import redis from '../databases/redis';
 
 const getPublicIdFromUrl = (url: string): string => {
   const parts = url.split('/');
@@ -25,6 +26,12 @@ export const PostService = {
     },
 
     getAllPost: async () => {
+        const cachedPosts = await redis.get("all-posts");
+
+          if (cachedPosts) {
+            return JSON.parse(cachedPosts);
+          }
+
         const posts = await prisma.post.findMany({
             select: {
             id: true,
@@ -49,13 +56,15 @@ export const PostService = {
             post.likeCount = post.postLikes.length;
             delete post.postLikes;
         });
-        return posts
+
+         await redis.set("all-posts", JSON.stringify(posts), "EX", 60);
+         return posts
     },
 
     getPostFollowing: async (userId: string) => {
         const follow = await prisma.follow.findMany({
             where: {
-                followerId: userId
+                followerId: userId,
             }
         })
         

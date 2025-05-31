@@ -1,3 +1,4 @@
+import redis from "../databases/redis";
 import { prisma } from "../databases/db";
 
 
@@ -47,7 +48,12 @@ export const followService = {
     },
 
     getFollowers: async (userId: string) => {
-        return await prisma.follow.findMany({
+        const cacheFollowers = await redis.get("user's-followers")
+
+        if(cacheFollowers) {
+            return JSON.parse(cacheFollowers);
+        }
+        const followers = await prisma.follow.findMany({
             where: {
                 followingId: userId
             },
@@ -63,5 +69,8 @@ export const followService = {
                createdAt: true,
            }
         })
+
+         await redis.set("user's-followerss", JSON.stringify(followers), "EX", 60);
+        return followers;
     }
 }

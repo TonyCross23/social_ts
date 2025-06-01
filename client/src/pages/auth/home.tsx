@@ -19,7 +19,6 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Feed</h1>
       {posts.map((post: any) => (
         <div key={post.id}>{post.content}</div>
       ))}

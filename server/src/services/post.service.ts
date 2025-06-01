@@ -37,7 +37,8 @@ export const PostService = {
             id: true,
             author: {
                 select: {
-                name: true
+                name: true,
+                image: true,
                 }
             },
             content: true,

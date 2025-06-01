@@ -16,12 +16,13 @@ export const PostController = {
     getAllPost: async (req:Request, res:Response) => {
         try {
             const posts = await PostService.getAllPost()
-                const formattedPosts = posts.map(({ author, ...rest }) => ({
-                    name: author.name,
-                    ...rest,
-                }));
+                // const formattedPosts = posts.map(({ author, ...rest }) => ({
+                //     name: author.name,
+                //     email: author.email,
+                //     ...rest,
+                // }));
 
-            res.status(200).json(formattedPosts)
+            res.status(200).json(posts)
         } catch (err: any) {
             res.status(400).json({message: err.message})
         }

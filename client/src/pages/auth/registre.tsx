@@ -12,18 +12,15 @@ const Registre = () => {
   })
 const onSubmit = async (data: RegisterData) => {
     try {
-        const response = await axios.post("http://localhost:5000/api/v1/auth/register", {
+         await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, {
             name: data.name,
             email: data.email,
             password: data.password,
             passwordConfirmation: data.passwordConfirmation
         })
-         console.log("Registration success:", response.data)
-         alert("Registration successful!")
          reset()
          navigate('/login')
     } catch (error: any) {
-        console.error("Registration error:", error.response?.data || error.message)
       alert(error.response?.data?.message || "Something went wrong")
     }
 }

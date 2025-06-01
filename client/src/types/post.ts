@@ -1,11 +1,12 @@
 export interface Post {
+  isLiked: boolean
   id: string
+  content: string
+  image?: string
+  createdAt: string
   author: {
     name: string
     image: string | null
   }
-  content: string
-  image: string
-  createdAt: string
   likeCount: number
 }

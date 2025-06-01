@@ -1,13 +1,15 @@
 import dayjs from 'dayjs'
 import { type FC } from 'react'
-import { FaRegThumbsUp, FaRegCommentDots, FaShare } from 'react-icons/fa';
+import { FaRegCommentDots, FaShare } from 'react-icons/fa';
 import type { Post } from '../types/post';
+import LikeButton from './likeButton';
 
 interface PostProps {
     post: Post
+    fetchPosts: () => void
 }
 
-const PostCard: FC<PostProps> = ({post}) => {
+const PostCard: FC<PostProps> = ({post, fetchPosts}) => {
   return (
    <div
           key={post.id}
@@ -58,10 +60,10 @@ const PostCard: FC<PostProps> = ({post}) => {
           )}
 
             <div className='card-footer px-2 py-2 flex justify-around'>
-                <button className="flex items-center space-x-1 text-blue-600 focus:outline-none">
-                    <span className='mt-2'>{post.likeCount}</span>
-                    <FaRegThumbsUp className="w-5 h-5" />
-                </button>
+               <div className='flex items-center space-x-1 text-gray-600 ml-4 focus:outline-none'>
+                <span className='me-2'>{post.likeCount}</span>
+                <LikeButton postId={post.id} isLikedInitial={post.isLiked} fetchPosts={fetchPosts}/>
+               </div>
                 <button className="flex items-center space-x-1 text-gray-600 ml-4 focus:outline-none">
                     <span className='mt-2'>{post.likeCount}</span>
                     <FaRegCommentDots className="w-5 h-5" />

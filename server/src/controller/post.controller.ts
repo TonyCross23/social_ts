@@ -15,7 +15,8 @@ export const PostController = {
     },
     getAllPost: async (req:Request, res:Response) => {
         try {
-            const posts = await PostService.getAllPost()
+            const userId = (req as any).user?.id;
+            const posts = await PostService.getAllPost(userId)
                 // const formattedPosts = posts.map(({ author, ...rest }) => ({
                 //     name: author.name,
                 //     email: author.email,

@@ -7,7 +7,7 @@ export const PostLikeController = {
     createLike: async (req: Request, res: Response): Promise<void> => {
         try {
          const userId = (req as any).user?.id
-         const {postId} = req.body
+         const {postId} = req.params
          
          const existingLike = await PostLikeService.checkUserLike({postId, userId})
 
@@ -28,7 +28,7 @@ export const PostLikeController = {
     unlikePost: async (req: Request, res: Response): Promise<void> => {
         try {
             const userId = (req as any).user?.id
-            const {postId} = req.body
+            const {postId} = req.params
 
             await PostLikeService.unlikePost({postId, userId})
 

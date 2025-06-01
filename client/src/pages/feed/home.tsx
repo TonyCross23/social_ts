@@ -8,7 +8,7 @@ import type { Post } from "../../types/post";
 dayjs.extend(relativeTime)
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   const fetchPosts = async () => {
     try {
@@ -25,8 +25,8 @@ const Home = () => {
 
   return (
     <div>
-      {posts.map((post: Post) => (
-        <PostCard key={post.id} post={post}/>
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} fetchPosts={fetchPosts}/>
       ))}
     </div>
   );

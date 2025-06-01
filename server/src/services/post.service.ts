@@ -25,41 +25,51 @@ export const PostService = {
         return post;
     },
 
-    getAllPost: async () => {
+    getAllPost: async (userId?: string) => {
         const cachedPosts = await redis.get("all-posts");
 
           if (cachedPosts) {
             return JSON.parse(cachedPosts);
           }
 
-        const posts = await prisma.post.findMany({
+          const posts = await prisma.post.findMany({
             select: {
             id: true,
+            content: true,
+            image: true,
+            createdAt: true,
             author: {
                 select: {
                 name: true,
                 image: true,
-                }
+                },
             },
-            content: true,
-            image: true,
             postLikes: {
                 select: {
-                id: true
-                }
+                id: true,
+                userId: true
+                },
             },
-            createdAt: true
-            }
-        });
+            },
+            orderBy: {
+            createdAt: "desc",
+            },
+        })
 
         // Add likeCount property to each post
-        posts.forEach((post: any) => {
-            post.likeCount = post.postLikes.length;
-            delete post.postLikes;
-        });
+  const formattedPosts = posts.map((post) => {
+    const likeCount = post.postLikes.length;
+    const isLiked = userId ? post.postLikes.some((like) => like.userId === userId) : false;
 
-         await redis.set("all-posts", JSON.stringify(posts), "EX", 60);
-         return posts
+    return {
+      ...post,
+      likeCount,
+      isLiked
+    };
+  });
+
+         await redis.set("all-posts", JSON.stringify(formattedPosts), "EX", 60);
+         return formattedPosts
     },
 
     getPostFollowing: async (userId: string) => {

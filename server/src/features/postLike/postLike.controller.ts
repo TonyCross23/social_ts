@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PostLikeService } from "./postLike.service";
+import redis from "../../databases/redis";
 
 
 
@@ -17,9 +18,8 @@ export const PostLikeController = {
          }
 
          await PostLikeService.createLike({postId,userId})
-
-         res.send(201).json({message: "Like the post"})
-
+         await redis.del("all-posts");
+         res.status(201).json({ message: "Liked the post" });
         } catch (err: any) {
             res.status(400).json({message: err.message})
         }
@@ -31,7 +31,7 @@ export const PostLikeController = {
             const {postId} = req.params
 
             await PostLikeService.unlikePost({postId, userId})
-
+            await redis.del("all-posts");
             res.status(200).json({message: "unliked the post"})
             
         } catch (err: any) {

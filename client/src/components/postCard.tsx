@@ -13,6 +13,7 @@ const PostCard: FC<PostProps> = ({post, fetchPosts}) => {
   return (
    <div
           key={post.id}
+          
           className="max-w-2xl mx-auto mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
         >
               <div className="flow-root px-3">
@@ -48,13 +49,13 @@ const PostCard: FC<PostProps> = ({post, fetchPosts}) => {
                 {post.content}
               </p>
                         {post.image ? (
-                                      <a href="#">
+                                      
               <img
                 className="w-full"
                 src={post.image}
                 alt={post.content || "Post image"}
               />
-            </a>
+
           ) : (
             ""
           )}

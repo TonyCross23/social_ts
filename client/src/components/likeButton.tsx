@@ -11,18 +11,28 @@ interface LikeButtonProps {
 const LikeButton = ({ postId, isLikedInitial,fetchPosts }: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(isLikedInitial)
 
-  const handleLike = async () => {
-    if (isLiked) {
-      await API.delete(`/feed/${postId}/unlike`)
+const handleLike = async () => {
+  const newIsLiked = !isLiked; // New state calculation
+  setIsLiked(newIsLiked); // Optimistically update the UI
+
+  try {
+    // Perform API request based on new state
+    if (newIsLiked) {
+      await API.post(`/feed/${postId}/like`); // Like action
     } else {
-      await API.post(`/feed/${postId}/like`)
+      await API.delete(`/feed/${postId}/unlike`); // Unlike action
     }
-    setIsLiked(!isLiked)
-    fetchPosts()
+    
+    fetchPosts(); // Refresh posts after action
+  } catch (error) {
+    console.error("Error updating like status:", error);
+    // Revert to the previous like state if an error occurs
+    setIsLiked(isLiked); // Reset to original state
   }
+}
 
   return (
-    <button onClick={handleLike} className="text-red-600">
+    <button onClick={handleLike} className="text-red-600 cursor-pointer">
       {isLiked ? <FaHeart className="w-5 h-5" /> : <FaRegHeart className="w-5 h-5" />}
     </button>
   )

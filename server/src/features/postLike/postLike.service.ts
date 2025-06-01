@@ -50,7 +50,7 @@ export const PostLikeService = {
             }
             
         })
-        await redis.set("user's-post-likes" , JSON.stringify(likes), "EX", 60)
+        await redis.set("user's-post-likes" , JSON.stringify(likes), "EX", 15)
         return likes
     }
 }

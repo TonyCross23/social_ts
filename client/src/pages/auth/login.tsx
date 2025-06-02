@@ -19,9 +19,10 @@ const onSubmit = async (data: FormData) => {
             email: data.email,
             password: data.password,
         })
-          const token = response.data.accessToken
-          localStorage.setItem("access_token", token)
-          login()
+              const { accessToken, user } = response.data
+              localStorage.setItem("access_token", accessToken)
+              localStorage.setItem("auth_user", JSON.stringify(user))
+          login(user)
           reset()
           navigate('/',{replace: true})
     } catch (error: any) {

@@ -66,11 +66,11 @@ const PostCard: FC<PostProps> = ({post, fetchPosts}) => {
                 <LikeButton postId={post.id} isLikedInitial={post.isLiked} fetchPosts={fetchPosts}/>
                </div>
                 <button className="flex items-center space-x-1 text-gray-600 ml-4 focus:outline-none">
-                    <span className='mt-2'>{post.likeCount}</span>
+                    <span className='mt-2'>0</span>
                     <FaRegCommentDots className="w-5 h-5" />
                 </button>
                 <button className="flex items-center space-x-1 text-gray-600 ml-4 focus:outline-none">
-                    <span className='mt-2'>{post.likeCount}</span>
+                    <span className='mt-2'>0</span>
                     <FaShare className="w-5 h-5" />
                 </button>
             </div>

@@ -19,7 +19,7 @@ export const AuthController = {
     try {
       const { email, password } = req.body;
 
-      const { accessToken, refreshToken } = await AuthService.login({
+      const { accessToken, refreshToken,user } = await AuthService.login({
         email,
         password,
       });
@@ -38,7 +38,7 @@ export const AuthController = {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
-      res.status(200).json({ message: "Login successful" });
+      res.status(200).json({ user });
     } catch (err: any) {
       res.status(401).json({ message: err.message });
     }

@@ -47,6 +47,7 @@ export const AuthService = {
         id: user.id,
         name: user.name,
         email: user.email,
+        image: user.image
       };
 
     return { accessToken, refreshToken, user: userInfo };

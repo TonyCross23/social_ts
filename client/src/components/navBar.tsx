@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/auth";
-import { Bell, MessageSquare, LogOut, Home, ChevronDown } from "lucide-react";
+import { Bell, MessageSquare, LogOut, Home, ChevronDown, User } from "lucide-react";
 import { NavLink } from "react-router";
 
 const NavBar = () => {
@@ -44,20 +44,34 @@ const NavBar = () => {
         <div className="flex items-center space-x-6">
           {/* User Dropdown */}
           {user && (
-            <div className="relative bg-gray-100 py-4 p-1 rounded-full">
+            <div className="relative bg-gray-100 border border-gray-200 rounded-full">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-1 text-gray-800 dark:text-white hover:text-blue-600"
+                className="relative flex items-center gap-1 text-gray-800 dark:text-white hover:text-blue-600"
               >
-                <span className="text-sm font-medium">{user.name}</span>
-                <ChevronDown className="w-3 h-3" />
+                <span className="relative">
+                  <img
+                    className="w-10 h-10 rounded-full"
+                    src={user.image ? user.image : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"}
+                    alt={user.name || "User image"}
+                  />
+                  <ChevronDown className="absolute bottom-0 right-0 w-4 h-4 bg-white dark:bg-gray-900 rounded-full p-0.5 shadow" />
+                </span>
               </button>
 
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg py-2 z-50">
-                  <button
+                
+                 <button
                     onClick={logout}
                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    <span className="text-sm font-medium">{user.name}</span>
+                  </button>
+                   <button
+                    onClick={logout}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-red-500 hover:text-white dark:hover:bg-gray-700"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout

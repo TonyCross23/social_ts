@@ -40,6 +40,7 @@ export const PostService = {
             createdAt: true,
             author: {
                 select: {
+                id: true,
                 name: true,
                 image: true,
                 },
@@ -151,7 +152,7 @@ export const PostService = {
         return updatePost;
     },
 
-    postDelete: async (id: string) => {
+    postDelete: async (id: string,userId: string) => {
 
         const post = await prisma.post.findUnique({
             where: {
@@ -161,6 +162,10 @@ export const PostService = {
 
         if(!post) {
           throw new Error("Post not found");
+        }
+
+        if (post.authorId !== userId) {
+            throw new Error("You can only delete your own posts");
         }
 
         if(post.image) {

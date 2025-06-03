@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/auth";
-import { Bell, MessageSquare, LogOut, Home, ChevronDown, User } from "lucide-react";
+import { Bell, LogOut, Home, ChevronDown, User, UserSearch } from "lucide-react";
 import { NavLink } from "react-router";
 
 const NavBar = () => {
@@ -17,7 +17,7 @@ const NavBar = () => {
         </a>
 
         {/* Center Menu Icons */}
-        <div className="flex space-x-20">
+        <div className="flex space-x-13 md:spacex-20">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -33,7 +33,7 @@ const NavBar = () => {
               />
             </NavLink>
           <button className="text-gray-600 dark:text-gray-300 hover:text-blue-600">
-            <MessageSquare className="w-6 h-6" />
+            <UserSearch className="w-6 h-6" />
           </button>
           <button className="text-gray-600 dark:text-gray-300 hover:text-blue-600">
             <Bell className="w-6 h-6" />
@@ -51,7 +51,7 @@ const NavBar = () => {
               >
                 <span className="relative">
                   <img
-                    className="w-10 h-10 rounded-full"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full"
                     src={user.image ? user.image : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"}
                     alt={user.name || "User image"}
                   />

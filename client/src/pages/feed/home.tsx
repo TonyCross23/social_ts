@@ -21,7 +21,7 @@ const Home = () => {
     error,
     refetch,
   } = useQuery<Post[]>({
-    queryKey: ["posts"],
+    queryKey: ["get","posts"],
     queryFn: fetchPosts,
   });
 

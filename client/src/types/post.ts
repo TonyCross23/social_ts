@@ -5,6 +5,7 @@ export interface Post {
   image?: string
   createdAt: string
   author: {
+    id: string,
     name: string
     image: string | null
   }

@@ -78,7 +78,8 @@ export const PostController = {
     postDelete: async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-            const post = await PostService.postDelete(id);
+            const userId = (req as any).user?.id;
+            const post = await PostService.postDelete(id,userId);
             res.status(200).json({ message: "Post deleted successfully" });
         } catch (error) {
             res.status(400).json({ message: error.message });

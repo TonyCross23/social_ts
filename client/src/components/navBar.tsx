@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/auth";
 import { Bell, LogOut, Home, ChevronDown, User, UserSearch } from "lucide-react";
 import { NavLink } from "react-router";
+import PostCreate from "./postCreate";
 
 const NavBar = () => {
   const logout = useAuthStore((state) => state.logout);
@@ -42,6 +43,7 @@ const NavBar = () => {
 
         {/* Right Profile & Logout */}
         <div className="flex items-center space-x-6">
+          <PostCreate/>
           {/* User Dropdown */}
           {user && (
             <div className="relative bg-gray-100 border border-gray-200 rounded-full">

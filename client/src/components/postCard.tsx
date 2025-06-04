@@ -3,22 +3,32 @@ import { useState, type FC } from "react";
 import { FaRegCommentDots, FaShare } from "react-icons/fa";
 import type { Post } from "../types/post";
 import LikeButton from "./likeButton";
-import { EllipsisVertical, MarsStroke, Trash, Truck } from "lucide-react";
+import { EllipsisVertical, MarsStroke, Trash } from "lucide-react";
 import { useAuthStore } from "../store/auth";
+import API from "../services/axiosClient";
 
 interface PostProps {
   post: Post;
   fetchPosts: () => void;
 }
 
-
 const PostCard: FC<PostProps> = ({ post, fetchPosts }) => {
   const user = useAuthStore((state) => state.user);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const handleOpenDropdown = () => {
-  if (dropdownOpen) setDropdownOpen(false);
-};
+    if (dropdownOpen) setDropdownOpen(false);
+  };
+
+const handleDeletePost = async (id: string) => {
+  try {
+     await API.delete(`/post/${id}`)
+    fetchPosts();
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
   return (
     <div
       key={post.id}
@@ -61,7 +71,7 @@ const PostCard: FC<PostProps> = ({ post, fetchPosts }) => {
                 {dropdownOpen && (
                   <div className="absolute right-0 top-8 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg py-2 z-50">
                  {user && post.author.id === user.id ? (
-                   <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                   <button onClick={() => handleDeletePost(post.id)} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <Trash className="w-4 h-4 text-red-500"/>
                     <span className="text-sm font-medium ms-1 text-red-500">Delete</span>
                   </button>

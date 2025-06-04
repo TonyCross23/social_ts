@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PostService } from "../services/post.service";
+import redis from "../databases/redis";
 
 export const PostController = {
     postCreate: async (req: Request, res: Response) => {
@@ -8,6 +9,7 @@ export const PostController = {
             let authorId = (req as any).user?.id;
             const image = (req as any).file?.path || null;
             const post = await PostService.createPost(content, authorId, image);
+            await redis.del("all-posts");
             res.status(201).json({post});
         } catch (err: any) {
             res.status(400).json({ message: err.message });
@@ -79,7 +81,8 @@ export const PostController = {
         try {
             const { id } = req.params;
             const userId = (req as any).user?.id;
-            const post = await PostService.postDelete(id,userId);
+            await PostService.postDelete(id,userId);
+            await redis.del("all-posts");
             res.status(200).json({ message: "Post deleted successfully" });
         } catch (error) {
             res.status(400).json({ message: error.message });

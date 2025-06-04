@@ -1,18 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import API from "../../services/axiosClient";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import PostCard from "../../components/postCard";
 import type { Post } from "../../types/post";
 import Loading from "../../components/loading";
+import { usePosts } from "../../hook/usePost";
 
 dayjs.extend(relativeTime);
-
-// API call function
-const fetchPosts = async (): Promise<Post[]> => {
-  const res = await API.get("/post/feed");
-  return res.data;
-};
 
 const Home = () => {
   const {
@@ -21,10 +14,7 @@ const Home = () => {
     isError,
     error,
     refetch,
-  } = useQuery<Post[]>({
-    queryKey: ["get","posts"],
-    queryFn: fetchPosts,
-  });
+  } = usePosts()
 
   if (isLoading) return <div className="flex items-center justify-center"><Loading/></div>;
   if (isError) return <div>Error: {(error as Error).message}</div>;

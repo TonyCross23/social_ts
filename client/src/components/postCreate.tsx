@@ -2,6 +2,7 @@ import { Image, Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import API from "../services/axiosClient";
+import { useQueryClient } from "@tanstack/react-query";
 import Loading from "./loading";
 
 type Inputs = {
@@ -11,6 +12,7 @@ type Inputs = {
 
 const PostCreate = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient()
 
     const {
     register,
@@ -19,25 +21,30 @@ const PostCreate = () => {
     formState: { errors },
   } = useForm<Inputs>()
   
+  const [loading, setLoading] = useState(false);
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const formData = new FormData();
-    formData.append("content", data.content);
-    if (data.image && data.image.length > 0) {
-      formData.append("image", data.image[0]);
-    }
-    const res = await API.post("/post/create", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    setIsOpen(false);
-    reset();
-    
-    if (res.status === 201) {
-     return <Loading/>
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("content", data.content);
+      if (data.image && data.image.length > 0) {
+        formData.append("image", data.image[0]);
+      }
+      const res = await API.post("/post/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setIsOpen(false);
+      if (res.status === 201) {
+        queryClient.invalidateQueries({ queryKey: ['get','posts'] })
+        reset();
+      }
+    } finally {
+      setLoading(false);
     }
   };
-
 
   return (
     <div>
@@ -95,8 +102,12 @@ const PostCreate = () => {
                 >
                   Cancel
                 </button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded">
-                  Post
+                <button
+                  className={`px-4 py-2 rounded min-w-[72px] text-white ${loading ? "cursor-not-allowed" : "bg-blue-600"}`}
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? <div className="mt-3"><Loading/></div> : "Post"}
                 </button>
               </div>
             </div>

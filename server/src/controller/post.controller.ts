@@ -19,12 +19,6 @@ export const PostController = {
         try {
             const userId = (req as any).user?.id;
             const posts = await PostService.getAllPost(userId)
-                // const formattedPosts = posts.map(({ author, ...rest }) => ({
-                //     name: author.name,
-                //     email: author.email,
-                //     ...rest,
-                // }));
-
             res.status(200).json(posts)
         } catch (err: any) {
             res.status(400).json({message: err.message})

@@ -1,40 +1,26 @@
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { registerSchema, type RegisterData } from "../../schema/formSchema";
 
-const registerSchema = z.object({
-    name: z.string().min(1,"Name is required"),
-    email: z.string().min(1,"Email is required").email("Invalid email"),
-    password: z.string().min(8, "Password should be 8 or more"),
-    passwordConfirmation: z.string().min(1,"passwordConfirmation is required"),
-}).refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords do not match",
-    path: ["passwordConfirmation"],
-})
-
-  type FormData = z.infer<typeof registerSchema>;
 
 const Registre = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: {errors}, reset } = useForm<FormData>({
+  const { register, handleSubmit, formState: {errors}, reset } = useForm<RegisterData>({
     resolver: zodResolver(registerSchema)
   })
-const onSubmit = async (data: FormData) => {
+const onSubmit = async (data: RegisterData) => {
     try {
-        const response = await axios.post("http://localhost:5000/api/v1/auth/register", {
+         await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, {
             name: data.name,
             email: data.email,
             password: data.password,
             passwordConfirmation: data.passwordConfirmation
         })
-         console.log("Registration success:", response.data)
-         alert("Registration successful!")
          reset()
          navigate('/login')
     } catch (error: any) {
-        console.error("Registration error:", error.response?.data || error.message)
       alert(error.response?.data?.message || "Something went wrong")
     }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PostService } from "../services/post.service";
+import redis from "../databases/redis";
 
 export const PostController = {
     postCreate: async (req: Request, res: Response) => {
@@ -8,6 +9,7 @@ export const PostController = {
             let authorId = (req as any).user?.id;
             const image = (req as any).file?.path || null;
             const post = await PostService.createPost(content, authorId, image);
+            await redis.del("all-posts");
             res.status(201).json({post});
         } catch (err: any) {
             res.status(400).json({ message: err.message });
@@ -15,13 +17,9 @@ export const PostController = {
     },
     getAllPost: async (req:Request, res:Response) => {
         try {
-            const posts = await PostService.getAllPost()
-                const formattedPosts = posts.map(({ author, ...rest }) => ({
-                    name: author.name,
-                    ...rest,
-                }));
-
-            res.status(200).json(formattedPosts)
+            const userId = (req as any).user?.id;
+            const posts = await PostService.getAllPost(userId)
+            res.status(200).json(posts)
         } catch (err: any) {
             res.status(400).json({message: err.message})
         }
@@ -76,7 +74,9 @@ export const PostController = {
     postDelete: async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-            const post = await PostService.postDelete(id);
+            const userId = (req as any).user?.id;
+            await PostService.postDelete(id,userId);
+            await redis.del("all-posts");
             res.status(200).json({ message: "Post deleted successfully" });
         } catch (error) {
             res.status(400).json({ message: error.message });

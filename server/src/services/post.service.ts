@@ -25,40 +25,52 @@ export const PostService = {
         return post;
     },
 
-    getAllPost: async () => {
+    getAllPost: async (userId?: string) => {
         const cachedPosts = await redis.get("all-posts");
 
           if (cachedPosts) {
             return JSON.parse(cachedPosts);
           }
 
-        const posts = await prisma.post.findMany({
+          const posts = await prisma.post.findMany({
             select: {
             id: true,
-            author: {
-                select: {
-                name: true
-                }
-            },
             content: true,
             image: true,
+            createdAt: true,
+            author: {
+                select: {
+                id: true,
+                name: true,
+                image: true,
+                },
+            },
             postLikes: {
                 select: {
-                id: true
-                }
+                id: true,
+                userId: true
+                },
             },
-            createdAt: true
-            }
-        });
+            },
+            orderBy: {
+            createdAt: "desc",
+            },
+        })
 
         // Add likeCount property to each post
-        posts.forEach((post: any) => {
-            post.likeCount = post.postLikes.length;
-            delete post.postLikes;
-        });
+  const formattedPosts = posts.map((post) => {
+    const likeCount = post.postLikes.length;
+    const isLiked = userId ? post.postLikes.some((like) => like.userId === userId) : false;
 
-         await redis.set("all-posts", JSON.stringify(posts), "EX", 60);
-         return posts
+    return {
+      ...post,
+      likeCount,
+      isLiked
+    };
+  });
+
+         await redis.set("all-posts", JSON.stringify(formattedPosts), "EX", 60);
+         return formattedPosts
     },
 
     getPostFollowing: async (userId: string) => {
@@ -140,7 +152,7 @@ export const PostService = {
         return updatePost;
     },
 
-    postDelete: async (id: string) => {
+    postDelete: async (id: string,userId: string) => {
 
         const post = await prisma.post.findUnique({
             where: {
@@ -150,6 +162,10 @@ export const PostService = {
 
         if(!post) {
           throw new Error("Post not found");
+        }
+
+        if (post.authorId !== userId) {
+            throw new Error("You can only delete your own posts");
         }
 
         if(post.image) {

@@ -43,7 +43,14 @@ export const AuthService = {
     const accessToken = generateAccessToken({ id: user.id });
     const refreshToken = generateRefreshToken({ id: user.id });
 
-    return { accessToken, refreshToken };
+      const userInfo = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.image
+      };
+
+    return { accessToken, refreshToken, user: userInfo };
   },
 
   forgotPassword: async (email: string) => {

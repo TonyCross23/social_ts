@@ -1,17 +1,13 @@
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { useAuthStore } from "../../store/auth";
+import { LoginSchema, type FormData } from "../../schema/formSchema";
 
-const LoginSchema = z.object({
-    email: z.string().min(1,"Email is required").email("Invalid email"),
-    password: z.string().min(1, "Password required"),
-})
-
-  type FormData = z.infer<typeof LoginSchema>;
 
 const Login = () => {
+  const login = useAuthStore((state) => state.login)
   const navigate = useNavigate();
   const { register, handleSubmit, formState: {errors}, reset } = useForm<FormData>({
     resolver: zodResolver(LoginSchema)
@@ -19,14 +15,16 @@ const Login = () => {
 const onSubmit = async (data: FormData) => {
     axios.defaults.withCredentials = true
     try {
-        const response = await axios.post("http://localhost:5000/api/v1/auth/login", {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
             email: data.email,
             password: data.password,
         })
-         console.log("Registration success:", response.data)
-         alert("Registration successful!")
-         reset()
-         navigate('/')
+              const { accessToken, user } = response.data
+              localStorage.setItem("access_token", accessToken)
+              localStorage.setItem("auth_user", JSON.stringify(user))
+          login(user)
+          reset()
+          navigate('/',{replace: true})
     } catch (error: any) {
         console.error("Registration error:", error.response?.data || error.message)
       alert(error.response?.data?.message || "Something went wrong")
